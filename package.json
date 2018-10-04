@@ -7,7 +7,7 @@
     "test": "test"
   },
   "scripts": {
-    "test": "mocha",
+    "test": "mocha --allow-uncaught -t 5000 --exit",
     "start": "node server.js"
   },
   "dependencies": {
