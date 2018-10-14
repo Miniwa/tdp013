@@ -8,7 +8,13 @@ var app = express();
 app.use(express.static("static"));
 
 app.route("/save")
-    .get(route.createMessage);
+    .all(route.createMessage);
+
+app.route("/flag")
+    .all(route.flagMessageRead);
+
+app.route("/getall")
+    .all(route.getMessages);
 
 //var server = app.listen(8000, function() {
 //    var host = server.address().address;

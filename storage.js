@@ -25,30 +25,40 @@ class Storage {
     createMessage(message) {
         return new Promise((resolve, reject) => {
             this.connect().then((db) => {
-                db.collection("messages").insertOne(message, (err, result) => {
+                let formatted = {
+                    "message": message.message,
+                    "created": Date.now(),
+                    "flag": true,
+                };
+                db.collection("messages").insertOne(formatted, (err, result) => {
                     if(err != null) {
                         reject(err);
                         return;
                     }
-                    resolve(result.insertedId);
+                    resolve(result.insertedId.toString());
                 });
-            }); 
+            }).catch((err) => {
+                reject(err);
+            });
         });
     }
     
-    updateMessage(message, callback) {
-        this.connect((err, db) => {
-            if(err != null) {
-                callback(err);
-                return;
-            }
-            db.collection("messages").updateOne({_id: message.id}, message, (err, result) => {
-                if(err != null) {
-                    callback(err);
-                    return;
-                }
-                callback(null, message);
-            })
+    setMessageRead(id) {
+        return new Promise((resolve, reject) => {
+            this.connect().then((db) => {
+                db.collection("messages").updateOne({"_id": mongo.ObjectId(id)}, {$set: {"flag": false}}, (err, result) => {
+                    if(err != null) {
+                        reject(err);
+                        return;
+                    }
+                    if(result.modifiedCount != 1) {
+                        reject(new Error("Non-existant message id."));
+                    }
+                    resolve();
+                });
+            }).catch((err) => {
+                reject(err);
+            });
         });
     }
     
@@ -60,33 +70,20 @@ class Storage {
                         reject(err);
                         return;
                     }
-                    resolve(result);
+                    let sorted = result.sort((a, b) => {
+                        if(a.created > b.created) {
+                            return -1;
+                        } else if(a.created === b.created) {
+                            return 0;
+                        } else {
+                            return 1;
+                        }
+                    });
+                    resolve(sorted);
                 });
             });
         });
     }
-
-    getMessage(id) {
-
-    }
-
-    deleteMessage(id, callback) {
-        this.connect((err, db) => {
-            if(err != null) {
-                callback(err);
-                return;
-            }
-            db.collection("messages").deleteOne({_id: id}, (err, result) => {
-                if(err != null) {
-                    callback(err);
-                    return;
-                }
-                callback(null, id);
-            })
-        });
-    }
 }
 
-module.exports = {
-    "Storage": Storage
-};
+module.exports = {Storage};
