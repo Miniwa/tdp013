@@ -81,6 +81,8 @@ class Storage {
                     });
                     resolve(sorted);
                 });
+            }).catch((err) => {
+                reject(err);
             });
         });
     }

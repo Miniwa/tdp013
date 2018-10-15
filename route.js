@@ -17,6 +17,7 @@ function createMessage(req, res) {
     backend.createMessage({message: req.query.message}).then((id) => {
         res.end();
     }).catch((err) => {
+        console.error(err);
         res.status(500).end();
     });
 }
@@ -36,6 +37,7 @@ function flagMessageRead(req, res) {
     backend.setMessageRead(id).then(() => {
         res.end();
     }).catch((err) => {
+        console.error(err);
         res.status(500).end();
     });
 }
@@ -49,8 +51,28 @@ function getMessages(req, res) {
     backend.getMessages().then((messages) => {
         res.json(messages).end();
     }).catch((err) => {
+        console.error(err);
         res.status(500).end();
     });
 }
 
-module.exports = {createMessage, flagMessageRead, getMessages, backend};
+function clearMessages(req, res) {
+    if(req.method !== "GET") {
+        res.status(405).end();
+        return;
+    }
+
+    backend.connect().then((db) => {
+        db.collection("messages").deleteMany({}, (err) => {
+            if(err != null) {
+                res.status(500).end();
+            } else {
+                res.end();
+            }
+        });
+    }).catch((err) => {
+        res.status(500).end();
+    });
+}
+
+module.exports = {createMessage, flagMessageRead, getMessages, clearMessages, backend};

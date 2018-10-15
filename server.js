@@ -16,11 +16,7 @@ app.route("/flag")
 app.route("/getall")
     .all(route.getMessages);
 
-//var server = app.listen(8000, function() {
-//    var host = server.address().address;
-//    var port = server.address().port;
-//    
-//    console.log("Example app listening at http://%s:%s", host, port);
-//});
+app.route("/clear")
+    .all(route.clearMessages);
 
 module.exports = app;

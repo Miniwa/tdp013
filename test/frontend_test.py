@@ -1,6 +1,6 @@
 import unittest
+import time
 from selenium import webdriver
-from selenium.webdriver.common.keys import Keys
 
 
 def children(element):
@@ -17,6 +17,7 @@ class WebTestCase(unittest.TestCase):
         cls.driver.close()
 
     def setUp(self):
+        self.driver.get("http://localhost:8000/clear")
         self.driver.get("http://localhost:8000")
         self.input = self.driver.find_element_by_css_selector("#input-text")
         self.publish = self.driver.find_element_by_css_selector("#btn-publish")
@@ -29,6 +30,8 @@ class WebTestCase(unittest.TestCase):
         _text = "hello"
         self.input.send_keys(_text)
         self.publish.click()
+        time.sleep(1)
+
         self.assertEqual(len(children(self.errors)), 0)
         self.assertEqual(len(children(self.messages)), 1)
 
@@ -45,6 +48,7 @@ class WebTestCase(unittest.TestCase):
         self.input.send_keys(second)
         self.publish.click()
 
+        time.sleep(1)
         published = children(self.messages)
         self.assertEqual(len(published), 2)
         self.assertEqual(
@@ -67,22 +71,27 @@ class WebTestCase(unittest.TestCase):
         message = "hello"
         self.input.send_keys(message)
         self.publish.click()
+        time.sleep(1)
 
         published = children(self.messages)[0]
         self.assertIn("unread", published.get_attribute("class"))
 
         checkbox = published.find_element_by_css_selector("input")
         checkbox.click()
+        time.sleep(1)
+
         self.assertNotIn("unread", published.get_attribute("class"))
 
-    def test_messages_disappear_on_reload(self):
+    def test_messages_persists_on_reload(self):
         message = "hello"
         self.input.send_keys(message)
         self.publish.click()
+        time.sleep(1)
 
         self.assertEqual(len(children(self.messages)), 1)
         self.driver.refresh()
+        time.sleep(1)
 
         self.messages = self.driver.find_element_by_css_selector(
             ".message-container")
-        self.assertEqual(len(children(self.messages)), 0)
+        self.assertEqual(len(children(self.messages)), 1)

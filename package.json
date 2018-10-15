@@ -8,7 +8,7 @@
   },
   "scripts": {
     "test": "nyc mocha --allow-uncaught -t 5000 --exit",
-    "start": "node server.js"
+    "start": "node main.js"
   },
   "dependencies": {
     "express": "^4.0.0",
