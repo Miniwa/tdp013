@@ -18,7 +18,7 @@ class WebTestCase(unittest.TestCase):
 
     def setUp(self):
         self.driver.get("http://localhost:8000/clear")
-        self.driver.get("http://localhost:8000")
+        self.driver.get("http://localhost:8008")
         self.input = self.driver.find_element_by_css_selector("#input-text")
         self.publish = self.driver.find_element_by_css_selector("#btn-publish")
         self.messages = self.driver.find_element_by_css_selector(

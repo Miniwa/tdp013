@@ -17,7 +17,6 @@ function createMessage(req, res) {
     backend.createMessage({message: req.query.message}).then((id) => {
         res.end();
     }).catch((err) => {
-        console.error(err);
         res.status(500).end();
     });
 }
@@ -37,7 +36,6 @@ function flagMessageRead(req, res) {
     backend.setMessageRead(id).then(() => {
         res.end();
     }).catch((err) => {
-        console.error(err);
         res.status(500).end();
     });
 }
@@ -51,7 +49,6 @@ function getMessages(req, res) {
     backend.getMessages().then((messages) => {
         res.json(messages).end();
     }).catch((err) => {
-        console.error(err);
         res.status(500).end();
     });
 }

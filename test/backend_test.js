@@ -1,6 +1,6 @@
 let chai = require("chai");
 let chaiHttp = require("chai-http");
-let app = require("../server");
+let app = require("../app");
 let should = chai.should();
 let route = require("../route");
 let server = null;

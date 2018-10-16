@@ -1,4 +1,4 @@
-let app = require("./server");
+let app = require("./app");
 
 process.on("SIGTERM", shutDown);
 process.on("SIGINT", shutDown);
@@ -11,5 +11,7 @@ let server = app.listen(8000, function() {
 
 function shutDown() {
     console.log("Shutting down gracefully");
-    process.exit(0);
+    server.close(() => {
+        process.exit(0);
+    });
 }

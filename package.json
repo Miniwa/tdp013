@@ -2,7 +2,7 @@
   "name": "twitter-clone",
   "version": "0.0.1",
   "description": "",
-  "main": "server.js",
+  "main": "main.js",
   "directories": {
     "test": "test"
   },
@@ -11,6 +11,7 @@
     "start": "node main.js"
   },
   "dependencies": {
+    "cors": "^2.8.4",
     "express": "^4.0.0",
     "mongodb": "^3.1.6"
   },
